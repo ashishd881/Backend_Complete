@@ -17,3 +17,15 @@ package,json ki devdependencies me nodemon aa gaya
 aur src ki index file me jo bhi likhnege unko ye run kar dega
 uske liye scripts me dev bana liya aur npm run dev kate hi nodeman chal jata hai
 "dev": "nodemon src/index.js"
+
+prettier nodemon waali website se nikal lo prettier bhi dev dependency hai it is needed when many people are working on same product koi semicolon laga aur koi nahi lagaya 
+
+ npm i -D prettier  d dev dependency ke liye hai
+
+ due to prettier we need to add some files manually
+ .prettierrc
+
+
+ prettier me code likhne ke badd click on niche preetier jo diya hai
+
+ prettierignore me jo jo file me prettier nahi laga wo likhenge
