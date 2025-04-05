@@ -1,0 +1,1 @@
+//package.json me main file index.js hai npm init se bahi thi
