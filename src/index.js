@@ -1,4 +1,4 @@
-//package.json me main file index.js hai npm init se bahi thi
+//package.json me main file index.js hai npm init se bani thi
 // require('dotenv').config({path: './.env'})            // https://www.npmjs.com/package/dotenv  //config ke andar env file ka path likh diya
 //upar require likhne se we followed a bad practise we can convert it to import
 
