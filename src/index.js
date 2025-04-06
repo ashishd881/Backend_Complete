@@ -12,8 +12,16 @@ dotenv.config({
     path: './.env'
 })
 
-connectDB()
-
+connectDB()             //connectDB ek asynchronous task hai toh wo ek promise bhi return karega toh response ke liye .then() laga liya error ke liye .catch() laga liya
+.then(()=>{ 
+    app.listen(process.env.PORT || 8000,() =>{
+        console.log(`SERVER IS running as port: ${process.env.PORT}`);
+    })
+   
+}) //server start karne ke liye .then me likha gaya hai app hamri database ka use kar ke listen karegi port ke liye process.env.PORT use kiya agar port nahi di gayi hai toh hum default port 80000 ka  use karenge
+.catch((err)=>{
+    console.log("MONGO db connection failed!!!",err)
+})
 
 
 

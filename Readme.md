@@ -29,3 +29,16 @@ prettier nodemon waali website se nikal lo prettier bhi dev dependency hai it is
  prettier me code likhne ke badd click on niche preetier jo diya hai
 
  prettierignore me jo jo file me prettier nahi laga wo likhenge
+
+
+
+ api reference wali video 
+ cookies install karo npmjs se module wali cors bhi cross origin resource sharing
+
+ note app.use(cors()) is used when we need middleware and configuration setting
+
+
+
+ middleware beech me check karega ki login hai ki nahi 
+
+ utils me async handler bnaya gaya hai because database se hum baar baar baat karenge toh usko ke seperate file me bana ke export kar do
