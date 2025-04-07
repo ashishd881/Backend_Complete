@@ -1,4 +1,4 @@
-import express from express
+import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser" // both cookieParser and cors are configured when the app is made
 
@@ -16,6 +16,23 @@ app.use(express.static("public"))             //public assets banaya hai image s
 
 //server ke user ke brower ki cookies ko set aur access karna ie using curd operations
 app.use(cookieParser())
+
+
+
+//routes import 
+
+import userRouter from './routes/user.routes.js'      //manchaha naam diya taki export default kar sake
+
+//routes declaration 
+
+// app.use("/users",userRouter)           //middle ware se router ko la rahe hai  ie users pe type karte hi control de diya userRouters pe user router user.routes.js file pe le jayega aur waha se pata chalega ki route pe user ko le jana hai
+//http://localhost:8000/users/register pe chala jayega
+//users ke baad sare cheeze user.routes.js me likhi jayengi
+
+//but here we are creating apis
+
+app.use("/api/v1/users",userRouter)    //v1 is version 1
+//this will take us to http://localhost:8000/api/v1/users/register
 
 
 export {app}

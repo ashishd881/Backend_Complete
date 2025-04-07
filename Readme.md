@@ -42,3 +42,6 @@ prettier nodemon waali website se nikal lo prettier bhi dev dependency hai it is
  middleware beech me check karega ki login hai ki nahi 
 
  utils me async handler bnaya gaya hai because database se hum baar baar baat karenge toh usko ke seperate file me bana ke export kar do
+
+
+ cloudnary ko as a utility rakhenge hum
