@@ -1,16 +1,13 @@
-const asyncHandler = (requestHandler)=>{
-    return (req,res,next) => {
-        Promise.resolve(requestHandler(req,res,next)).catch(err => next(err))
-    }
-}
+const asyncHandler = (requestHandler) => {
+  return (req, res, next) => {
+    Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err));
+  };
+};
 
+export { asyncHandler };
 
-export {asyncHandler}
-
-
-
-// the above can be done like this also 
-//asyncHandler is a higher order function ie wo function wo function ko accept aur return kar saakte hai
+// the above can be done like this also
+//asyncHandler is a higher order function ie wo function jo function ko accept aur return kar saakte hai
 // const asyncHandler = (fn)=>{}
 // const asyncHandler = (fn)=> {()=>{}}    we just remove the curly braces
 
@@ -21,6 +18,6 @@ export {asyncHandler}
 //         res.status(err.code || 500).json({
 //             success:false,
 //             messsage: err.messsage
-//         }) 
+//         })
 //     }
 // }

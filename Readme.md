@@ -5,8 +5,6 @@ https://mrkandreev.name/snippets/gitignore-generator/#Node
 
 javascript me 2 tarah se importing hoti hai ek common js se ek module se we will use module so package.json me type me module kar do
 
-
-
 Nodemon is used when we want to run the server as soon as wwe saave the files
 https://nodemon.io/
 
@@ -18,30 +16,24 @@ aur src ki index file me jo bhi likhnege unko ye run kar dega
 uske liye scripts me dev bana liya aur npm run dev kate hi nodeman chal jata hai
 "dev": "nodemon src/index.js"
 
-prettier nodemon waali website se nikal lo prettier bhi dev dependency hai it is needed when many people are working on same product koi semicolon laga aur koi nahi lagaya 
+prettier nodemon waali website se nikal lo prettier bhi dev dependency hai it is needed when many people are working on same product koi semicolon laga aur koi nahi lagaya
 
- npm i -D prettier  d dev dependency ke liye hai
+npm i -D prettier d dev dependency ke liye hai
 
- due to prettier we need to add some files manually
- .prettierrc
+due to prettier we need to add some files manually
+.prettierrc
 
+prettier me code likhne ke badd click on niche preetier jo diya hai
 
- prettier me code likhne ke badd click on niche preetier jo diya hai
+prettierignore me jo jo file me prettier nahi laga wo likhenge
 
- prettierignore me jo jo file me prettier nahi laga wo likhenge
+api reference wali video
+cookies install karo npmjs se module wali cors bhi cross origin resource sharing
 
+note app.use(cors()) is used when we need middleware and configuration setting
 
+middleware beech me check karega ki login hai ki nahi
 
- api reference wali video 
- cookies install karo npmjs se module wali cors bhi cross origin resource sharing
+utils me async handler bnaya gaya hai because database se hum baar baar baat karenge toh usko ke seperate file me bana ke export kar do
 
- note app.use(cors()) is used when we need middleware and configuration setting
-
-
-
- middleware beech me check karega ki login hai ki nahi 
-
- utils me async handler bnaya gaya hai because database se hum baar baar baat karenge toh usko ke seperate file me bana ke export kar do
-
-
- cloudnary ko as a utility rakhenge hum
+cloudnary ko as a utility rakhenge hum

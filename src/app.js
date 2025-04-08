@@ -1,29 +1,29 @@
-import express from "express"
-import cors from "cors"
-import cookieParser from "cookie-parser" // both cookieParser and cors are configured when the app is made
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser"; // both cookieParser and cors are configured when the app is made
 
-const app =express()
+const app = express();
 
-app.use(cors({
+app.use(
+  cors({
     origin: process.env.CORS_ORIGIN,
-    credentials: true
-}))
+    credentials: true,
+  })
+);
 
-//these ar econfigurations now
-app.use(express.json({limit:"16kb"}))     //we are accepting json on this file
-app.use(express.urlencoded({extended: true,limit: "16kb"}))    //url ko encode karne ke liye because in some places we would need ki space %20 kar diya extended se mtlb object ke andar object aa sakta hai
-app.use(express.static("public"))             //public assets banaya hai image sfevicin rakhne ke liye  public folder ka naam hai
+//these are econfigurations now
+app.use(express.json({ limit: "16kb" })); //we are accepting json on this file
+app.use(express.urlencoded({ extended: true, limit: "16kb" })); //url ko encode karne ke liye because in some places we would need ki space %20 kar diya extended se mtlb object ke andar object aa sakta hai
+app.use(express.static("public")); //public assets banaya hai image sfevicin rakhne ke liye  public folder ka naam hai
 
 //server ke user ke brower ki cookies ko set aur access karna ie using curd operations
-app.use(cookieParser())
+app.use(cookieParser());
 
+//routes import
 
+import userRouter from "./routes/user.routes.js"; //manchaha naam diya taki export default kar sake
 
-//routes import 
-
-import userRouter from './routes/user.routes.js'      //manchaha naam diya taki export default kar sake
-
-//routes declaration 
+//routes declaration
 
 // app.use("/users",userRouter)           //middle ware se router ko la rahe hai  ie users pe type karte hi control de diya userRouters pe user router user.routes.js file pe le jayega aur waha se pata chalega ki route pe user ko le jana hai
 //http://localhost:8000/users/register pe chala jayega
@@ -31,8 +31,7 @@ import userRouter from './routes/user.routes.js'      //manchaha naam diya taki 
 
 //but here we are creating apis
 
-app.use("/api/v1/users",userRouter)    //v1 is version 1
+app.use("/api/v1/users", userRouter); //v1 is version 1
 //this will take us to http://localhost:8000/api/v1/users/register
 
-
-export {app}
+export { app };

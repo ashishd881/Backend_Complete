@@ -1,13 +1,23 @@
 import { Router } from "express";
-import { registerUser } from "../controller/user.controller.js";     //is tarak ka naam {registerUser} hum tabhi le sakte hai ja export default na ho
+import { registerUser } from "../controller/user.controller.js"; //is tarak ka naam {registerUser} hum tabhi le sakte hai ja export default na ho
+import { upload } from "../middlewares/multer.middleware.js";
 
+const router = Router();
 
-const router = Router()
-
-router.route("/register").post(registerUser)     //http://localhost:8000/users/register pe chala jayega
+router.route("/register").post(
+  upload.fields([
+    {
+      name: "avatar",
+      maxCount: 1, //because 1 file accept karenge
+    },
+    {
+      name: "coverImage",
+      maxCount: 1,
+    },
+  ]),
+  registerUser
+); //http://localhost:8000/users/register pe chala jayega upload kar ke middleware lagaya hai multiple filws ko process kane ke liye field ka use huaa hai
 
 // router.route("/login").post(login)     //http://localhost:8000/users/login pe chala jayega
 
-
-
-export default router
+export default router;
