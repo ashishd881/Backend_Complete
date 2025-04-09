@@ -9,9 +9,7 @@ import dotenv from "dotenv"; //niche config bhi kar do this is a experimental pr
 import connectDB from "./db/index.js";
 import { app } from "./app.js";
 
-dotenv.config({
-  path: "./.env",
-});
+dotenv.config();
 
 connectDB() //connectDB ek asynchronous task hai toh wo ek promise bhi return karega toh response ke liye .then() laga liya error ke liye .catch() laga liya
   .then(() => {

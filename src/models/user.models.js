@@ -38,7 +38,7 @@ const userSchema = new Schema(
         ref: "Video", //video ka reference le lenge
       },
     ],
-    passsword: {
+    password: {
       type: String,
       required: [true, "password is required"], //custom array message de diya agar userr ne password nahi diya ho toh
     },
@@ -51,12 +51,18 @@ const userSchema = new Schema(
   }
 );
 
+
+
 // we cant use arrow function here because usme this ka use nahi kar skate hai async laga diya kyunki is kaam me time lag saakt hai
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  this.passsword = await bcrypt.hash(this.password, 10);
+  if (!this.isModified("password")) return next()
+  this.password = await bcrypt.hash(this.password, 10);
+  // console.log(this.password)
+  
   next(); /// 10 tells hash rounds
 }); //pre is a middleware data save hone se password ko encrypt kar do read docs
+
+
 
 //next dala gaya because agle kaam ko calll bhi karna hia
 //this has a problem when we will save photo then also password will be encrypted so if condition is used
