@@ -67,7 +67,7 @@ userSchema.pre("save", async function (next) {
 //next dala gaya because agle kaam ko calll bhi karna hia
 //this has a problem when we will save photo then also password will be encrypted so if condition is used
 
-userSchema.method.isPasswordCorrect = async function (password) {
+userSchema.methods.isPasswordCorrect = async function (password) {
   //custom methods banaliya isPasswordCorrect
   return await bcrypt.compare(password, this.password); //true aur false dega user ka diya password password me hai aur this.passsword encrypted wala hai
 };
@@ -76,7 +76,7 @@ userSchema.methods.generateAccessToken = function () {
   //these are jwt tokens
   return jwt.sign(
     {
-      //sign method token generare kar diya
+      //sign method token generate kar diya
       // jo information hum ne di hai wo payload hai
       //this waali cheez data base se aa rahi hai
       //json.io

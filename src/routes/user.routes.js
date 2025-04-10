@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { registerUser } from "../controller/user.controller.js"; //is tarak ka naam {registerUser} hum tabhi le sakte hai ja export default na ho
+import { loginUser, logoutUser, refreshAccessToken, registerUser } from "../controller/user.controller.js"; //is tarak ka naam {registerUser} hum tabhi le sakte hai ja export default na ho
 import { upload } from "../middlewares/multer.middleware.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
@@ -20,4 +21,11 @@ router.route("/register").post(
 
 // router.route("/login").post(login)     //http://localhost:8000/users/login pe chala jayega
 
+router.route("/login").post(loginUser)
+
+
+//secured routes
+
+router.route("/logout").post(verifyJWT ,logoutUser)       //logoutUser run hone se phale verify jWT chalega
+router.route("/refresh_token").post(refreshAccessToken)   //verifyjwt not required 
 export default router;

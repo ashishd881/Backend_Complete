@@ -37,3 +37,11 @@ middleware beech me check karega ki login hai ki nahi
 utils me async handler bnaya gaya hai because database se hum baar baar baat karenge toh usko ke seperate file me bana ke export kar do
 
 cloudnary ko as a utility rakhenge hum
+
+
+
+seepost man configuratuon and everything
+login karne ke baad refreshtoken and accesstoken aa jayega cookies me 
+
+access and refresh token help user not to log in frenquently refresh token is kept in database  after access token gets expired  user gets 401 request access expires and refresh token is used to get access again we send refresh token and match with the
+refreshtoken in backend sif both ar same then we get new access and refresh token and we get anew session
