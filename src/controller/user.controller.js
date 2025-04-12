@@ -255,17 +255,17 @@ const changeCurrentPassword = asyncHandler(async(req,res)=>{
 const getCurrentUser = asyncHandler(async(req,res) =>{
   return res
             .status(200)
-            .json(200,req.user, " current user fetched successgully")
+            .json(new ApiResponse(200,req.user, " current user fetched successgully"))
 })
 
-const updateAccountDetails = asyncHnadler(async(req,res)=>{
+const updateAccountDetails = asyncHandler(async(req,res)=>{
   const {fullname, email}  = req.body
 
   if(!fullname || !email){
     throw new ApiError(400,"All fields are required")
   }
 
-  User.findByIdAndUpdate(req.user?._id,{
+  const user = User.findByIdAndUpdate(req.user?._id,{
       $set: {
         fullname,
         email:email,
@@ -301,6 +301,8 @@ const updateUserAvatar = asyncHandler(async(req,res) =>{
     },
     {new : true}
   ).select("-password")
+
+  //delete the  previous avatar file by making a utility function purani image ko delete kar do purane url se
 
   return res
             .status(200)
@@ -343,8 +345,122 @@ const updateUserCoverImage = asyncHandler(async(req,res) =>{
 
 })
 
+const getUserChannelProfile = asyncHandler(async(req)=>{
+  const {username}=req.params             //body se request nahi karenge params se karenge ie url se username nilkal liya
+  if(!username?.trim){          //optional operator ka use kiy abecause it is possible thar username we get may not exist
+    throw new ApiError(400,"usename is missing")
+  }
+  // User.find({username})
+  //aggregate mthod array leta hai uske andar pipelines likhi jati hai [{},{},{}]  curlybraces ke andar pipeline hai  aggegrate pipeline likhne ke baad jo values aati hai wo array ke form me aati hai
+  const channel = await User.aggregate([
+    {
+      $match:{
+        username:username?.toLowerCase()
+      }
+    },
+    {
+      $lookup:{
+        from:"subscriptions",            //Subscription lowercase aur plural ho jayega
+        localField: "_id",
+        foreignField: "channel",
+        as:"subscribers"
+      }
+    },
+    {
+      $lookup:{
+        from:"subscriptions",            //Subscription lowercase aur plural ho jayega
+        localField: "_id",
+        foreignField: "subscriber",
+        as:"subscribedTo"
+      }
+    },
+    {
+      $addFields:{
+        subscribersCount:{
+          $size:"$subscribers"           //ye subscribers ka count aa gaya $ is used because this is a field
+        },
+        channelsSubscribedToCount:{
+          $size:"$subscribedTo"
+        },
+        isSubscribed:{
+          $cond:{
+            if:{$in:[req.user?._id,"$subscribers.subscriber"]},    //user ke id nikal ki aur field ke andar ja ke compare kar liya 
+            then: true,
+            else: false
+          }
+        }
+      }
+    },
+    {
+      $project:{    //jis jis values ko project kana hai unke aaage 1 laga do
+        fullname:1,
+        Username:1,
+        subscribersCount:1,
+        channelsSubscribedToCount:1,
+        isSubscribed:1,
+        avatar:1,
+        coverImage:1
+      }
+    }
+  ])
+  if(!channel?.length){
+    throw new ApiError(404,"chanenl doesnt exist")
+  }
+  return res
+            .status(200)
+            .json(
+              new ApiResponse(200,"userchannel fetched successfully")
+            )
+})
 
-
+const getWatchHistory = asyncHandler(async(req,res)=>{
+  const user = await User.aggregate([
+    {   //req.user._id string deta hai aur us string ko mongodb id me convert kar deta hia 
+      $match:{
+        _id : new mongoose.Types.ObjectId(req.user._id)          //req.user._id jab hum pipelinening me likhte hai tab mongoose usko objectid me convert nahi kar pata hai so we will create object id 
+      }
+    },
+    {
+      $lookup :{
+        from :"vidoes",
+        localField: "watchHistory",
+        foreignField:"_id",
+        as:"watchHistory",               //comma laga hum sub pipeline likhenge
+        pipeline:[
+          {
+            $lookup:{
+              from:"users",
+              localField:"owner",
+              foreignField:"_id",
+              as:"owner",
+              pipeline:[
+                {
+                  $project:{
+                    fullName: 1,
+                    username: 1,
+                    avatar: 1,
+                  }
+                }
+              ]
+            }
+          },
+          {
+            $addFields:{
+              owner:{
+                $first: "$owner"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ])   
+  return res
+          .status(200)
+          .json(
+            new ApiResponse(200,user[0].getWatchHistory,"watch History Fetched Successfully")
+          )                     
+})
 
 export { registerUser,
           loginUser,
@@ -353,8 +469,10 @@ export { registerUser,
           changeCurrentPassword,
           getCurrentUser,
           updateAccountDetails,
-          updateUserAvatar
-
+          updateUserAvatar,
+          updateUserCoverImage,
+          getUserChannelProfile,
+          getWatchHistory
 
 
 

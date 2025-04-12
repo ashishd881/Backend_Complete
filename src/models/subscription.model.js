@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const subscriptionSchema = new Schema({
     subscriber:{
         type: Schema.Types.ObjectId,       //one who is subscribing
-        ref :"Users"
+        ref :"User"
     },
     channel:{
         type : Scheama.Types.ObjectId, //ont to whom 'subscriber is' subscribing
@@ -13,4 +13,4 @@ const subscriptionSchema = new Schema({
 
 
 
-export const Subscription = moongoose.model("Subscription",subscriptionSchema)
+export const Subscription = mongoose.model("Subscription",subscriptionSchema)
