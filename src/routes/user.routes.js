@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { loginUser, logoutUser, refreshAccessToken, registerUser } from "../controller/user.controller.js"; //is tarak ka naam {registerUser} hum tabhi le sakte hai ja export default na ho
+import { changeCurrentPassword, getCurrentUser, getUserChannelProfile, getWatchHistory, loginUser, logoutUser, refreshAccessToken, registerUser, updateAccountDetails, updateUserAvatar, updateUserCoverImage } from "../controller/user.controller.js"; //is tarak ka naam {registerUser} hum tabhi le sakte hai ja export default na ho
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -28,4 +28,13 @@ router.route("/login").post(loginUser)
 
 router.route("/logout").post(verifyJWT ,logoutUser)       //logoutUser run hone se phale verify jWT chalega
 router.route("/refresh_token").post(refreshAccessToken)   //verifyjwt not required 
+router.route("/change-password").post(verifyJWT,changeCurrentPassword)
+router.route("/current-user").get(verifyJWT,getCurrentUser)
+router.route("/update-account").patch(verifyJWT, updateAccountDetails)       //saari cheexe update nahi kiya so we use .patch
+router.route("/avatar").patch(verifyJWT,upload.single("avatar"),updateUserAvatar)
+router.route("/cover-image").patch(verifyJWT,upload.single("/coverImage"),updateUserCoverImage)
+router.route("/c/:username").get(verifyJWT,getUserChannelProfile)         //params se le rahe hai data 
+router.route("/history").get(verifyJWT, getWatchHistory)
+
+
 export default router;
