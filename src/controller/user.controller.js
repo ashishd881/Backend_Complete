@@ -4,7 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { uploadOnCloudnary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"  
-// import mongoose from "mongoose";
+import mongoose from "mongoose";
 
 const generateAccessAndRefreshTokens  = async(userId)=>{  //this is not a  webrequest and a internal method so no need of asyncHandler 
   try {
@@ -95,6 +95,7 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     username: username.toLowerCase(),
   });
+  // console.log("user is from here")
   // console.log(user);
   
   const createdUser = await User.findById(user._id).select(
@@ -128,12 +129,12 @@ const loginUser  = asyncHandler(async (req,res)=>{
       }) //user import hua hai
 
       if(!user){
-        await ApiError(404,"User doesnt exist")
+        throw new ApiError(404,"User doesnt exist")
       }
 
       const isPasswordValid = await user.isPasswordCorrect(password)
       if(!isPasswordValid){
-        await ApiError(401,"Invalid User credentials")
+        throw new ApiError(401,"Invalid User credentials")
       }
 
       const {accessToken , refreshToken} = await generateAccessAndRefreshTokens(user._id)          //accesstoken aur refreshtoken return hoga toh destructure kar ke le lo variable me
@@ -164,17 +165,22 @@ const loginUser  = asyncHandler(async (req,res)=>{
 
 const logoutUser = asyncHandler(async(req,res) => {
   //user
+  
   await User.findByIdAndUpdate(
+    
     req.user._id,
     {
-      $set: {
-        refreshToken: undefined
-      }
+      $unset: {
+        refreshToken: 1 ///jis cheez ki remove karna h unset me usme 1 pass kar do
+      
+      },
+     
     },
     {
       new:true
     }
   )
+  // console.log(refreshToken)
   const options = {          //options object is designed to use cookies
     httpOnly : true,
     secure : true
@@ -184,15 +190,22 @@ const logoutUser = asyncHandler(async(req,res) => {
             .clearCookie("accessToken",options)
             .clearCookie("refreshToken", options)
             .json(new ApiResponse(200,{},"User logged Out"))
+           
 
-})
+}
+
+
+)
 
 const refreshAccessToken = asyncHandler(async (req,res)=>{
   const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken                      //koi agar mobile app use kar raha hai toh body se refresh token aayega
-
+//   console.log("Cookies: ", req.cookies);
+// console.log("Body: ", req.body);
   if(!incomingRefreshToken){
     throw new ApiError(401,"inauthorized request")
   }
+
+
 
   try {
     const decodedToken = jwt.verify(incomingRefreshToken,process.env.REFRESH_TOKEN_SECRET
@@ -205,7 +218,7 @@ const refreshAccessToken = asyncHandler(async (req,res)=>{
       throw new ApiError(401,"Invalid refresh token")
     }
   
-    if(incomingrefreshToken !== user?.refreshToken){
+    if(incomingRefreshToken !== user?.refreshToken){
       throw new ApiError(401,"Refresh Token is expired ao used")
     }
   
@@ -255,7 +268,7 @@ const changeCurrentPassword = asyncHandler(async(req,res)=>{
 const getCurrentUser = asyncHandler(async(req,res) =>{
   return res
             .status(200)
-            .json(new ApiResponse(200,req.user, " current user fetched successgully"))
+            .json(new ApiResponse(200,req.user, " current user fetched successfully"))
 })
 
 const updateAccountDetails = asyncHandler(async(req,res)=>{
@@ -265,7 +278,7 @@ const updateAccountDetails = asyncHandler(async(req,res)=>{
     throw new ApiError(400,"All fields are required")
   }
 
-  const user = User.findByIdAndUpdate(req.user?._id,{
+  const user = await User.findByIdAndUpdate(req.user?._id,{
       $set: {
         fullname,
         email:email,
@@ -283,7 +296,7 @@ const updateUserAvatar = asyncHandler(async(req,res) =>{
   //agar cloudinary use nahi karna toh isko bhi hum database me upload kara sakte hai
 
   if(!avatarLocalPath){
-    throw new ApiError(400,"Avatat file is missing")
+    throw new ApiError(400,"Avatar file is missing")
   }
 
   const avatar = await uploadOnCloudnary(avatarLocalPath)
@@ -316,7 +329,8 @@ const updateUserAvatar = asyncHandler(async(req,res) =>{
 const updateUserCoverImage = asyncHandler(async(req,res) =>{
   const coverImageLocalPath =  req.file?.path   //multer middlewaare se mila hai ye agar file present hai toh optionally wo file le li
   //agar cloudinary use nahi karna toh isko bhi hum database me upload kara sakte hai
-
+  console.log("*******")
+  console.log(coverImageLocalPath)
   if(!coverImageLocalPath){
     throw new ApiError(400,"coverImage file is missing")
   }
@@ -345,7 +359,7 @@ const updateUserCoverImage = asyncHandler(async(req,res) =>{
 
 })
 
-const getUserChannelProfile = asyncHandler(async(req)=>{
+const getUserChannelProfile = asyncHandler(async(req,res)=>{
   const {username}=req.params             //body se request nahi karenge params se karenge ie url se username nilkal liya
   if(!username?.trim){          //optional operator ka use kiy abecause it is possible thar username we get may not exist
     throw new ApiError(400,"usename is missing")

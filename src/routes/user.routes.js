@@ -24,16 +24,16 @@ router.route("/register").post(
 router.route("/login").post(loginUser)
 
 
-//secured routes
+//secured routes   A protected route (also called a private route) is a route in a web or mobile app that requires the user to be authenticated (logged in) before they can access it.
 
 router.route("/logout").post(verifyJWT ,logoutUser)       //logoutUser run hone se phale verify jWT chalega
 router.route("/refresh_token").post(refreshAccessToken)   //verifyjwt not required 
 router.route("/change-password").post(verifyJWT,changeCurrentPassword)
 router.route("/current-user").get(verifyJWT,getCurrentUser)
 router.route("/update-account").patch(verifyJWT, updateAccountDetails)       //saari cheexe update nahi kiya so we use .patch
-router.route("/avatar").patch(verifyJWT,upload.single("avatar"),updateUserAvatar)
+router.route("/avatar").patch(verifyJWT,upload.single("avatar"),updateUserAvatar)      //postman me avatar use karna hai
 router.route("/cover-image").patch(verifyJWT,upload.single("coverImage"),updateUserCoverImage)
-router.route("/c/:username").get(verifyJWT,getUserChannelProfile)         //params se le rahe hai data 
+router.route("/c/:username").get(verifyJWT,getUserChannelProfile)         //params se le rahe hai data toh username pass karna hoga postman me send karte wakt
 router.route("/history").get(verifyJWT, getWatchHistory)
 
 
