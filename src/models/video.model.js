@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import mongooseAggegratePaginate from "mongoose-aggregate-paginate-v2";
-const videoScheama = new Schema(
+const videoSchema = new Schema(
   {
     videoFile: {
       type: String, //cloudinary url
@@ -35,5 +35,5 @@ const videoScheama = new Schema(
   }
 );
 //is se hum aggegrartion pipelining karenge
-videoScheama.plugin(mongooseAggegratePaginate);
+videoSchema.plugin(mongooseAggegratePaginate);
 export const Video = mongoose.Model("Video", videoSchema);
